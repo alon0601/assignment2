@@ -1,7 +1,9 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -22,7 +24,8 @@ import java.util.concurrent.BlockingDeque;
  * <p>
  */
 public abstract class MicroService implements Runnable {
-    private MessageBus messageBus = MessageBusImpl.getInstance();
+
+    final MessageBus messageBus = MessageBusImpl.getInstance();
     private boolean terminated = false;
     private final String name;
     private Map<Class<? extends Message>,Callback> callBacks;
@@ -34,6 +37,9 @@ public abstract class MicroService implements Runnable {
      */
     public MicroService(String name) {
         this.name = name;
+        callBacks = new ConcurrentHashMap<>();
+        futureQueue = new ConcurrentHashMap<>();
+
     }
 
     /**

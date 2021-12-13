@@ -19,7 +19,6 @@ public class Future<T> {
 	private T value;
 	private boolean isProcessed;
 	public Future() {
-		//TODO: implement this
 		value = null;
 		isProcessed = false;
 	}
@@ -33,7 +32,6 @@ public class Future<T> {
      * 	       
      */
 	public synchronized T get() {
-		//TODO: implement this.
 		if(!isProcessed)
 			try {
 				wait();
@@ -48,7 +46,6 @@ public class Future<T> {
      * Resolves the result of this Future object.
      */
 	public synchronized void resolve (T result) {
-		//TODO: implement this.
 		value = result;
 		isProcessed = true;
 		notifyAll();
@@ -58,7 +55,6 @@ public class Future<T> {
      * @return true if this object has been resolved, false otherwise
      */
 	public boolean isDone() {
-		//TODO: implement this.
 		return isProcessed;
 	}
 	
