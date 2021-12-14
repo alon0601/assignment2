@@ -11,7 +11,7 @@ public class CPUTest {
 
     @Before
     public void setUp() throws Exception {
-        c = new CPU();
+        c = new CPU(3);
     }
 
     @After

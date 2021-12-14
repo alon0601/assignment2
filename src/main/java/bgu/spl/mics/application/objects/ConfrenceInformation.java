@@ -8,4 +8,10 @@ public class ConfrenceInformation {
 
     private String name;
     private int date;
+
+    public ConfrenceInformation(String name,int data){
+        this.date = data;
+        this.name = name;
+    }
+
 }

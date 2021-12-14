@@ -59,7 +59,7 @@ public abstract class MicroService implements Runnable {
      * @param <T>      The type of result expected for the subscribed event.
      * @param type     The {@link Class} representing the type of event to
      *                 subscribe to.
-     * @param callback The callback that should be called when messages of type
+     * @param callback The callback that should be called when bgu.spl.mics.application.messages of type
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
@@ -73,9 +73,9 @@ public abstract class MicroService implements Runnable {
     /**
      * Subscribes to broadcast message of type {@code type} with the callback
      * {@code callback}. This means two things:
-     * 1. Subscribe to broadcast messages in the singleton event-bus using the
+     * 1. Subscribe to broadcast bgu.spl.mics.application.messages in the singleton event-bus using the
      * supplied {@code type}
-     * 2. Store the {@code callback} so that when broadcast messages of type
+     * 2. Store the {@code callback} so that when broadcast bgu.spl.mics.application.messages of type
      * {@code type} received it will be called.
      * <p>
      * For a received message {@code m} of type {@code type = m.getClass()}
@@ -86,7 +86,7 @@ public abstract class MicroService implements Runnable {
      * @param <B>      The type of broadcast message to subscribe to
      * @param type     The {@link Class} representing the type of broadcast
      *                 message to subscribe to.
-     * @param callback The callback that should be called when messages of type
+     * @param callback The callback that should be called when bgu.spl.mics.application.messages of type
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */

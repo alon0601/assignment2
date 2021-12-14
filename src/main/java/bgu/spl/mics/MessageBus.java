@@ -80,7 +80,7 @@ public interface MessageBus {
     /**
      * Using this method, a <b>registered</b> micro-service can take message
      * from its allocated queue.
-     * This method is blocking meaning that if no messages
+     * This method is blocking meaning that if no bgu.spl.mics.application.messages
      * are available in the micro-service queue it
      * should wait until a message becomes available.
      * The method should throw the {@link IllegalStateException} in the case

@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.objects;
 
 
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 /**
  * Passive object representing the cluster.
  * <p>
@@ -9,14 +12,23 @@ package bgu.spl.mics.application.objects;
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class Cluster {
-
-
 	/**
      * Retrieves the single instance of this class.
      */
+	private static Cluster cluster = null;
+	Collection<GPU> GPUS ;
+	Collection<CPU> CPUS;
+
 	public static Cluster getInstance() {
-		//TODO: Implement this
-		return null;
+		if (cluster == null){
+			cluster = new Cluster();
+		}
+		return cluster;
+	}
+
+	private Cluster(){
+		GPUS = new ConcurrentLinkedDeque<>();
+		CPUS = new ConcurrentLinkedDeque<>();
 	}
 
 }
