@@ -11,7 +11,7 @@ class GPUTest {
 
     @Before
     public void setUp() throws Exception {
-        g = new GPU();
+        g = new GPU(GPU.Type.GTX1080);
     }
 
     @After

@@ -1,6 +1,14 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.*;
+import bgu.spl.mics.application.objects.Data;
+import bgu.spl.mics.application.objects.Model;
+import bgu.spl.mics.application.objects.Student;
+import com.sun.org.apache.xpath.internal.operations.Mod;
+
+import java.util.List;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -12,14 +20,35 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class StudentService extends MicroService {
-    public StudentService(String name) {
-        super("Change_This_Name");
-        // TODO Implement this
+
+    private List<Model> models;
+    private Student student;
+
+    public StudentService(String name, List<Model> models, Student student) {
+        super(name);
+        this.student = student;
+        this.models = models;
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
-
+        this.subscribeBroadcast(PublishConferenceBroadcast.class, callback->{
+            List<Model> listModels = callback.getModels();
+            for (Model m:listModels){
+                if (m.getStudent() == this.student){
+                    this.student.addPublication();
+                }
+                else{
+                    this.student.addRead();
+                }
+            }
+        });
+        for (Model model:models){
+            Future<Model> trainModel= sendEvent(new TrainModelEvent(model));
+            Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));
+            if (testModel.get().getResults() == Model.Results.Good){
+                sendEvent(new PublishResultsEvent(testModel.get()));
+            }
+        }
     }
 }

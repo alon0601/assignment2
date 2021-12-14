@@ -1,5 +1,9 @@
 package bgu.spl.mics.application.objects;
 
+import bgu.spl.mics.application.services.StudentService;
+
+import java.util.List;
+
 /**
  * Passive object representing single student.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
@@ -8,14 +12,43 @@ public class Student {
     /**
      * Enum representing the Degree the student is studying for.
      */
-    enum Degree {
+    public enum Degree {
         MSc, PhD
     }
 
-    private int name;
+    private String name;
     private String department;
     private Degree status;
     private int publications;
     private int papersRead;
+    private List<Model> models;
 
+    public Student(String name,String department,Degree status,List<Model> models){
+        this.name = name;
+        this.department = department;
+        this.status = status ;
+        this.publications = 0;
+        this.papersRead = 0;
+        this.models = models;
+    }
+
+    public int getPublications() {
+        return publications;
+    }
+
+    public void setPublications(int publications) {
+        this.publications = publications;
+    }
+
+    public void setPapersRead(int papersRead) {
+        this.papersRead = papersRead;
+    }
+
+    public void addRead(){
+        this.papersRead++;
+    }
+
+    public void addPublication(){
+        this.publications++;
+    }
 }

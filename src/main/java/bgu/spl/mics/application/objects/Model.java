@@ -14,7 +14,7 @@ public class Model {
      */
     enum Status {preTrained,Training,Trained,Tested}
     private Status status;
-    enum Results {None,Good,Bad}
+    public enum Results {None,Good,Bad}
     private Results results;
 
     public Data getData() {
