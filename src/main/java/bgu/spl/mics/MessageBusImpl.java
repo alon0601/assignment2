@@ -94,7 +94,7 @@ public class MessageBusImpl implements MessageBus {
 			if (eventQueue.get(e.getClass()) != null) {
 				BlockingDeque<MicroService> micros = eventQueue.get(e.getClass());
 				MicroService m = micros.poll();
-				Future<T> future = new Future<T>();
+				Future<T> future = new Future<>();
 				microServiceMessages.get(m).add(e);
 				futureQueue.put(e, future);
 				micros.addLast(m);

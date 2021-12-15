@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.objects;
 
+import bgu.spl.mics.application.services.TimeService;
+
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -11,13 +13,23 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class CPU {
 
     private int cors;
-    private Collection<DataBatch> processing;
+    private Collection<DataBatch> unProcessedData;
+    private Collection<DataBatch> processedData;
+    private boolean isProcessing = false;
     private Cluster cluster;
+    private int currentTick;//not sure if we can do this
+
+    final private Object lock = new Object();
 
     public CPU(int numOfCors){
         this.cors = numOfCors;
-        this.processing = new ConcurrentLinkedDeque<>();
+        this.unProcessedData = new ConcurrentLinkedDeque<>();
+        this.processedData = new ConcurrentLinkedDeque<>();
         cluster = Cluster.getInstance();
+    }
+
+    public void setCurrentTick(int currentTick) {
+        this.currentTick = currentTick;
     }
 
     public boolean isEmpty() {
@@ -28,12 +40,29 @@ public class CPU {
     }
 
     public boolean isProcessing() {
-        return true;
+        return isProcessing;
     }
 
-    public void process() {
+    public void process(DataBatch dataBatch) {
+        synchronized (lock) {
+            int start = currentTick;
+            if (dataBatch.getData().getType() == Data.Type.Images) {
+                if (this.currentTick - start >= (32 / cors) * 4)
+                    sendData(dataBatch);
+            }
+            if (dataBatch.getData().getType() == Data.Type.Images) {
+                if (this.currentTick - start >= (32 / cors) * 2)
+                    sendData(dataBatch);
+            }
+            if (dataBatch.getData().getType() == Data.Type.Images) {
+                if (this.currentTick - start >= (32 / cors))
+                    sendData(dataBatch);
+            }
+        }
+
     }
 
-    public void sendData() {
+    public void sendData(DataBatch dataBatch) {
+        cluster.processedData(dataBatch);
     }
 }

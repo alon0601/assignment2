@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PublishConferenceBroadcast implements Broadcast {
-    List<Model> models;
+    private List<Model> models;
 
     public PublishConferenceBroadcast(){
         models = new LinkedList<>();

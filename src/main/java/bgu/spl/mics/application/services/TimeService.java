@@ -33,7 +33,11 @@ public class TimeService extends MicroService{
 		super("Time Service");
 		this.tickTime = tickTime;
 		this.duration = duration;
-		currentTime = 0;
+		currentTime = 1;
+	}
+
+	public int getCurrentTime() {
+		return currentTime;
 	}
 
 	private void tick(){

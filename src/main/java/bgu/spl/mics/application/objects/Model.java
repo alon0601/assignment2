@@ -12,10 +12,14 @@ public class Model {
     /**
      * Enum representing the status of the Model.
      */
-    enum Status {preTrained,Training,Trained,Tested}
+    public enum Status {preTrained,Training,Trained,Tested}
     private Status status;
     public enum Results {None,Good,Bad}
     private Results results;
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
 
     public Data getData() {
         return data;

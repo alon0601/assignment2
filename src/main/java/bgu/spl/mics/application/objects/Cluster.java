@@ -2,6 +2,8 @@ package bgu.spl.mics.application.objects;
 
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -16,9 +18,9 @@ public class Cluster {
      * Retrieves the single instance of this class.
      */
 	private static Cluster cluster = null;
-	Collection<GPU> GPUS ;
 	Collection<CPU> CPUS;
-
+	private Map<DataBatch,GPU> unProcessedData;
+	private Map<GPU,DataBatch> processedData;
 
 
 	public static Cluster getInstance() {
@@ -29,12 +31,25 @@ public class Cluster {
 	}
 
 	public void unprocessedData(DataBatch batch,GPU relevantGpu){
+		boolean allProcessing = true;
+		unProcessedData.put(batch,relevantGpu);
+		while(!unProcessedData.isEmpty())
+			for(CPU cpu:CPUS)
+				if(!cpu.isProcessing()) {
+					allProcessing = false;
+					cpu.process(batch);
+				}
+	}
 
+	public void processedData(DataBatch dataBatch){
+		GPU relevantGpu = this.unProcessedData.get(dataBatch);
+		relevantGpu.trainModel(dataBatch);
 	}
 
 	private Cluster(){
-		GPUS = new ConcurrentLinkedDeque<>();
 		CPUS = new ConcurrentLinkedDeque<>();
+		unProcessedData = new ConcurrentHashMap<>();
+		processedData = new ConcurrentHashMap<>();
 	}
 
 }
