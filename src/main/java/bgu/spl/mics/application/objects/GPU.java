@@ -1,7 +1,7 @@
 package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.application.services.GPUService;
-import sun.util.calendar.Gregorian;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,13 @@ public class GPU {
 
     public boolean HaveUnProcessData(){
         return haveUnProcessData;
+    }
+
+    @Override
+    public String toString(){
+        return "type : " + this.type + System.lineSeparator();
+
+
     }
 
 }

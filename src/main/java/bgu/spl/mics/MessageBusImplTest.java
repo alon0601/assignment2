@@ -34,8 +34,8 @@ public class MessageBusImplTest {
         messageBus = MessageBusImpl.getInstance();
         e = new ExampleEvent("do stuff");
         b = new ExampleBroadcast("3");
-        micro2 = new GPUService("momo",new GPU(GPU.Type.RTX2080));
-        micro = new CPUService("momi",new CPU(3));
+        micro2 = new GPUService(new GPU(GPU.Type.RTX2080));
+        micro = new CPUService(new CPU(3));
         messageBus.register(micro);
         messageBus.register(micro2);
     }
@@ -87,7 +87,7 @@ public class MessageBusImplTest {
     @Test
     public void register() throws InterruptedException {
         assertThrows(IllegalStateException.class,() -> messageBus.awaitMessage(micro2));
-        MicroService micro3 = new CPUService("menash",new CPU(4));
+        MicroService micro3 = new CPUService(new CPU(4));
         messageBus.register(micro3);
         messageBus.subscribeEvent(e.getClass(),micro3);
         messageBus.sendEvent(e);

@@ -20,8 +20,8 @@ public class GPUService extends MicroService {
     private int ticks;
 
 
-    public GPUService(String name,GPU gpu) {
-        super(name);
+    public GPUService(GPU gpu) {
+        super("GPU");
         this.gpu = gpu;
         ticks = 1;
     }

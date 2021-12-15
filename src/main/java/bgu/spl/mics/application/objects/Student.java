@@ -32,6 +32,10 @@ public class Student {
         this.models = models;
     }
 
+    public List<Model> getModels(){
+        return this.models;
+    }
+
     public int getPublications() {
         return publications;
     }
@@ -50,5 +54,11 @@ public class Student {
 
     public void addPublication(){
         this.publications++;
+    }
+    @Override
+    public String toString(){
+        return "name : " + this.name + System.lineSeparator() + "department : " + this.department + System.lineSeparator()
+                + "Degree : " + this.status + System.lineSeparator()
+                + "models : " + this.models + System.lineSeparator();
     }
 }

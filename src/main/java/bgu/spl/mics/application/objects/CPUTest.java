@@ -28,16 +28,16 @@ public class CPUTest {
     @Test
     public void process() {
         assertFalse(c.isProcessing());
-        c.process(new DataBatch(new Data(Data.Type.Images,1,1),1));
+        c.process(new DataBatch(new Data(Data.Type.Images,1),1));
         assertTrue(c.isProcessing());
     }
 
     @Test
     public void sendData() {
         c.getData();
-        c.process(new DataBatch(new Data(Data.Type.Images,1,1),1));
+        c.process(new DataBatch(new Data(Data.Type.Images,1),1));
         assertTrue(c.isProcessing());
-        c.sendData(new DataBatch(new Data(Data.Type.Images,1,1),1));
+        c.sendData(new DataBatch(new Data(Data.Type.Images,1),1));
         assertTrue(c.isEmpty());
     }
 

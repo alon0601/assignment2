@@ -17,6 +17,11 @@ public class Model {
     public enum Results {None,Good,Bad}
     private Results results;
 
+    public Model(String name,Data data){
+        this.name = name;
+        this.data = data;
+    }
+
     public void setStatus(Status status){
         this.status = status;
     }
@@ -39,5 +44,10 @@ public class Model {
 
     public Student getStudent() {
         return student;
+    }
+    @Override
+    public String toString(){
+        return System.lineSeparator() + "name : " + this.name + System.lineSeparator()
+                + "data : " + this.data + System.lineSeparator();
     }
 }

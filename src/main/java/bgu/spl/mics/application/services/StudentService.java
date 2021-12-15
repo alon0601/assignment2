@@ -6,7 +6,7 @@ import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.Data;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+
 
 import java.util.List;
 
@@ -21,13 +21,11 @@ import java.util.List;
  */
 public class StudentService extends MicroService {
 
-    private List<Model> models;
     private Student student;
 
-    public StudentService(String name, List<Model> models, Student student) {
-        super(name);
+    public StudentService(Student student) {
+        super("studentService");
         this.student = student;
-        this.models = models;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class StudentService extends MicroService {
                 }
             }
         });
-        for (Model model:models){
+        for (Model model:student.getModels()){
             Future<Model> trainModel= sendEvent(new TrainModelEvent(model));
             model.setStatus(Model.Status.preTrained);
             Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));

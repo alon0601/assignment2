@@ -17,9 +17,9 @@ public class Data {
     private int processed;
     private int size;
 
-    public Data(Type type,int processed,int size){
+    public Data(Type type,int size){
         this.type = type;
-        this.processed = processed;
+        this.processed = 0;
         this.size = size;
     }
 
@@ -29,5 +29,11 @@ public class Data {
 
     public int getSize() {
         return size;
+    }
+
+    public String toString(){
+        return System.lineSeparator() + "Type : " + this.type + System.lineSeparator()
+                + "processed : " + this.processed + System.lineSeparator()
+                + "size : " + this.size;
     }
 }

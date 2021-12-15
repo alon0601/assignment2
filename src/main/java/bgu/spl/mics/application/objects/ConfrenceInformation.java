@@ -10,12 +10,15 @@ public class ConfrenceInformation {
 
     private String name;
     private int date;
-    private ConferenceService conference;
 
     public ConfrenceInformation(String name,int data){
         this.date = data;
         this.name = name;
-        this.conference = new ConferenceService(name);
+    }
+    @Override
+    public String toString(){
+        return "name: " + this.name + System.lineSeparator() +
+                "date: " + this.date;
     }
 
 }

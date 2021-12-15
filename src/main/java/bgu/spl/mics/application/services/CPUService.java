@@ -16,8 +16,8 @@ public class CPUService extends MicroService {
     private CPU cpu;
     private int ticks;
 
-    public CPUService(String name,CPU cpu) {
-        super(name);
+    public CPUService(CPU cpu) {
+        super("CPU");
         this.cpu = cpu;
         ticks = 1;
     }
