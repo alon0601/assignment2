@@ -2,6 +2,7 @@ package bgu.spl.mics;
 
 import bgu.spl.mics.Event;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.objects.CPU;
 import bgu.spl.mics.application.services.CPUService;
 import bgu.spl.mics.application.services.GPUService;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
@@ -33,7 +34,7 @@ public class MessageBusImplTest {
         e = new ExampleEvent("do stuff");
         b = new ExampleBroadcast("3");
         micro2 = new GPUService("momo");
-        micro = new CPUService("momi");
+        micro = new CPUService("momi",new CPU(3));
         messageBus.register(micro);
         messageBus.register(micro2);
     }
@@ -85,7 +86,7 @@ public class MessageBusImplTest {
     @Test
     public void register() throws InterruptedException {
         assertThrows(IllegalStateException.class,() -> messageBus.awaitMessage(micro2));
-        MicroService micro3 = new CPUService("menash");
+        MicroService micro3 = new CPUService("menash",new CPU(4));
         messageBus.register(micro3);
         messageBus.subscribeEvent(e.getClass(),micro3);
         messageBus.sendEvent(e);

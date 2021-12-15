@@ -17,7 +17,6 @@ public class GPU {
     private Type type;
     private Model model;
     private boolean haveUnprocesData;
-    private GPUService Gpu;
 
     public GPU(Type type){
         this.type = type;
@@ -34,8 +33,11 @@ public class GPU {
 
     }
 
-    public void sendData(){
-
+    public void sendData(Model model){
+        Data data = model.getData();
+        for (int i = 0; i< data.getSize();i = i + 1000){
+            Cluster.getInstance().unprocessedData(new DataBatch(data,i),this);
+        }
     }
 
     public boolean HaveUnprocess(){

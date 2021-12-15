@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.objects.GPU;
 
 /**
@@ -15,16 +17,24 @@ import bgu.spl.mics.application.objects.GPU;
 public class GPUService extends MicroService {
 
     private GPU gpu;
+    private int ticks;
 
 
-    public GPUService(String name) {
-        super("Change_This_Name");
-        // TODO Implement this
+    public GPUService(String name,GPU gpu) {
+        super(name);
+        this.gpu = gpu;
+        ticks = 1;
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        subscribeBroadcast(TickBroadcast.class,callback-> {
+            this.ticks++;
+        });
+        subscribeEvent(TrainModelEvent.class,callback->{
+            this.gpu.sendData(callback.getModel());
+
+        });
 
     }
 }

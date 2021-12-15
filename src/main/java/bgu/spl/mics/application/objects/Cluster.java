@@ -19,11 +19,17 @@ public class Cluster {
 	Collection<GPU> GPUS ;
 	Collection<CPU> CPUS;
 
+
+
 	public static Cluster getInstance() {
 		if (cluster == null){
 			cluster = new Cluster();
 		}
 		return cluster;
+	}
+
+	public void unprocessedData(DataBatch batch,GPU relevantGpu){
+
 	}
 
 	private Cluster(){
