@@ -31,6 +31,14 @@ public class Data {
         return size;
     }
 
+    public void updateProcess(){
+        this.processed = this.processed + 1000;
+    }
+
+    public int getProcessed(){
+        return processed;
+    }
+
     public String toString(){
         return System.lineSeparator() + "Type : " + this.type + System.lineSeparator()
                 + "processed : " + this.processed + System.lineSeparator()

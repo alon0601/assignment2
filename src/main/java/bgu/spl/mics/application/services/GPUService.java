@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Event;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
@@ -18,28 +19,38 @@ public class GPUService extends MicroService {
 
     private GPU gpu;
     private int ticks;
+    private boolean training;
+    private Event currEvent;
 
 
     public GPUService(GPU gpu) {
         super("GPU");
         this.gpu = gpu;
-        ticks = 1;
+        ticks = 0;
+        training = false;
+        currEvent = null;
     }
 
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class,callback-> {
             this.ticks++;
-            gpu.setCurrentTick(ticks);
+            this.gpu.setCurrentTick(ticks);
+            if (training) {
+                this.gpu.sendData();
+                this.gpu.trainModel();
+            }
+            if (this.gpu.finished()){
+                training = false;
+                this.complete(this.currEvent,this.gpu.getModel());
+                currEvent = null;
+            }
         });
         subscribeEvent(TrainModelEvent.class,callback->{
-            this.gpu.sendData(callback.getModel());
-            while(!this.gpu.finished());
-            this.messageBus.complete(callback, gpu.getModel());
-            subscribeEvent(TestModelEvent.class,test->{
-                System.out.printf("");
-            });
-
+            this.gpu.setModel(callback.getModel());
+            this.gpu.sendData();
+            this.training = true;
+            this.currEvent = callback;
         });
 
     }
