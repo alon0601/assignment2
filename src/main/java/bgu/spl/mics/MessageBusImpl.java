@@ -68,7 +68,6 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void complete(Event<T> e, T result) {
 
 		//should we lock this?
-
 		futureQueue.get(e).resolve(result);
 		futureQueue.remove(e);
 	}

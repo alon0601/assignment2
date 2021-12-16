@@ -80,13 +80,13 @@ public class GPU {
             }
             else if(this.currentTick >= startProTime + ticksAmount){
                 this.processedData.remove(0);
-                System.out.println("b");
                 this.model.getData().updateProcess();
                 this.startProTime = -1;
                 this.freeCapacity++;
+                System.out.println(this.model.getData().getProcessed());
             }
         }
-        if (this.model.getData().getProcessed() == this.model.getData().getSize()){
+        if (this.model.getData().getProcessed() >= this.model.getData().getSize()){
             this.isFinished = true;
             this.haveUnProcessData = false;
             this.model.setStatus(Model.Status.Trained);
@@ -103,7 +103,6 @@ public class GPU {
             DataBatch batch = new DataBatch(data,this.indexBatch);
             this.indexBatch = this.indexBatch + 1000;
             cluster.unprocessedData(batch,this);
-            System.out.println("a");
         }
         freeCapacity = 0;
         if (indexBatch >= data.getSize()){

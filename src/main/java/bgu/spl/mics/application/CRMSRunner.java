@@ -130,7 +130,9 @@ public class CRMSRunner {
             else
                 degree = Student.Degree.MSc;
             Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelSt);
-            Thread t4 = new Thread(new StudentService(student));
+            student.getModels().get(i);
+            StudentService s = new StudentService(student);
+            Thread t4 = new Thread(s);
             studentsT.add(t4);
         }
         return studentsT;

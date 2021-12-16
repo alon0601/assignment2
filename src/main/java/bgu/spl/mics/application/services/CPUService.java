@@ -27,9 +27,7 @@ public class CPUService extends MicroService {
         subscribeBroadcast(TickBroadcast.class, callback->{
             ticks++;
             cpu.setCurrentTick(ticks);
-            if (cpu.haveUnProcessedData()){
-                cpu.process();
-            }
+            cpu.process();
         });
     }
 }
