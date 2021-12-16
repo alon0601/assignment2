@@ -1,10 +1,7 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.objects.*;
-import bgu.spl.mics.application.services.CPUService;
-import bgu.spl.mics.application.services.ConferenceService;
-import bgu.spl.mics.application.services.GPUService;
-import bgu.spl.mics.application.services.StudentService;
+import bgu.spl.mics.application.services.*;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -39,6 +36,8 @@ public class CRMSRunner {
         Double dDuration = (Double) json.get("Duration");
         int duration = dDuration.intValue();
         int tickTime = dTickTime.intValue();
+        TimeService timeService = new TimeService(tickTime,duration);
+        Thread threadTime = new Thread(timeService);
         ArrayList<Object> students = (ArrayList<Object>)json.get("Students");
         for (int i = 0; i < students.size();i++){
             LinkedTreeMap<Object,Object> t = (LinkedTreeMap<Object, Object>)students.get(i);
@@ -69,6 +68,7 @@ public class CRMSRunner {
             st.add(student);
             System.out.println(student);
         }
+        threads.add(threadTime);
 
         List<GPU> gpus1 = new ArrayList<>();
         ArrayList<Object> gpus = (ArrayList<Object>) json.get("GPUS");

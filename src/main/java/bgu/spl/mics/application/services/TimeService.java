@@ -29,7 +29,7 @@ public class TimeService extends MicroService{
 //		return timeService;
 //	}
 
-	private TimeService(int tickTime,int duration) {
+	public TimeService(int tickTime, int duration) {
 		super("Time Service");
 		this.tickTime = tickTime;
 		this.duration = duration;
