@@ -47,7 +47,6 @@ public class CPU {
 
     public void process() {
         if (!unProcessedData.isEmpty()) {
-            System.out.println("c");
             DataBatch dataBatch = unProcessedData.getFirst();
             if (startTick == -1){
                 startTick = currentTick;
@@ -59,13 +58,13 @@ public class CPU {
                         startTick = -1;
                     }
                 }
-                if (dataBatch.getData().getType() == Data.Type.Images) {
+                if (dataBatch.getData().getType() == Data.Type.Text) {
                     if (this.currentTick - startTick >= (32 / cors) * 2) {
                         sendData(dataBatch);
                         startTick = -1;
                     }
                 }
-                if (dataBatch.getData().getType() == Data.Type.Images) {
+                if (dataBatch.getData().getType() == Data.Type.Tabular) {
                     if (this.currentTick - startTick >= (32 / cors)) {
                         sendData(dataBatch);
                         startTick = -1;
@@ -82,7 +81,6 @@ public class CPU {
 
     public void addBatch(DataBatch batch) {
         unProcessedData.add(batch);
-        System.out.println(unProcessedData);
     }
 
     public boolean haveUnProcessedData(){

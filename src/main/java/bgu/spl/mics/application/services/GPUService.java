@@ -40,13 +40,15 @@ public class GPUService extends MicroService {
                 this.gpu.sendData();
                 this.gpu.trainModel();
             }
-            if (this.gpu.finished()){
+            if (training && this.gpu.finished()){
+                System.out.println(Thread.currentThread());
                 training = false;
                 this.complete(this.currEvent,this.gpu.getModel());
                 currEvent = null;
             }
         });
         subscribeEvent(TrainModelEvent.class,callback->{
+            System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName());
             this.gpu.setModel(callback.getModel());
             this.gpu.sendData();
             this.training = true;

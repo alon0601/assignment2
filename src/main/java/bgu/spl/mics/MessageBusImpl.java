@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.TrainModelEvent;
+
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,7 +55,6 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-
 		synchronized (type) {
 			if (broadcastQueue.get(type) == null)
 				broadcastQueue.put(type, new LinkedBlockingDeque<>());
@@ -75,13 +76,15 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		synchronized (b.getClass()){
+		synchronized (b.getClass()) {
 			BlockingDeque<MicroService> microServices = broadcastQueue.get(b.getClass());
-			for(MicroService m:microServices){
-				try {
-					microServiceMessages.get(m).put(b);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			if (microServices != null) {
+				for (MicroService m : microServices) {
+					try {
+						microServiceMessages.get(m).put(b);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

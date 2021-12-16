@@ -35,11 +35,9 @@ public class Cluster {
 		CPU cpu = CPUS.removeFirst();
 		cpu.addBatch(batch);
 		CPUS.addLast(cpu);
-		System.out.println("unpro");
 	}
 
 	public void processedData(DataBatch dataBatch){
-		System.out.println("pro");
 		GPU relevantGpu = this.unProcessedData.get(dataBatch);
 		relevantGpu.addProcessed(dataBatch);
 
