@@ -21,21 +21,21 @@ class GPUTest {
     @Test
     void getModel() {
         Model m = new Model("dd",new Data(Data.Type.Tabular,3));
-        g.trainModel(new DataBatch(new Data(Data.Type.Images,1),1));
+        g.trainModel();
         assertEquals(m,g.getModel());
     }
 
     @Test
     void trainModel() {
         Model m = new Model("dd",new Data(Data.Type.Tabular,3));
-        g.trainModel(new DataBatch(new Data(Data.Type.Images,1),1));
+        g.trainModel();
         assertTrue(g.finished());
     }
 
     @Test
     void sendData() {
         assertTrue(g.HaveUnProcessData());
-        g.sendData(new Model("dd",new Data(Data.Type.Tabular,3)));
+        g.sendData();
         assertFalse(g.HaveUnProcessData());
     }
 }
