@@ -31,12 +31,10 @@ public class Cluster {
 	}
 
 	public void unprocessedData(DataBatch batch,GPU relevantGpu){
-		synchronized (GPU.class) {
-			unProcessedData.put(batch, relevantGpu);
-			CPU cpu = CPUS.removeFirst();
-			cpu.addBatch(batch);
-			CPUS.addLast(cpu);
-		}
+		unProcessedData.put(batch,relevantGpu);
+		CPU cpu = CPUS.removeFirst();
+		cpu.addBatch(batch);
+		CPUS.addLast(cpu);
 	}
 
 	public void processedData(DataBatch dataBatch){

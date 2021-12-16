@@ -2,7 +2,6 @@ package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.application.services.GPUService;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +86,7 @@ public class GPU {
             }
         }
         if (this.model.getData().getProcessed() >= this.model.getData().getSize()){
+            System.out.println("where am i?" + Thread.currentThread());
             this.isFinished = true;
             this.haveUnProcessData = false;
             this.model.setStatus(Model.Status.Trained);
