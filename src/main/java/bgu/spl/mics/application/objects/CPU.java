@@ -27,6 +27,7 @@ public class CPU {
         this.unProcessedData = new ConcurrentLinkedDeque<>();
         cluster = Cluster.getInstance();
         startTick = -1;
+        this.cluster.addCpu(this);
     }
 
     public void setCurrentTick(int currentTick) {
@@ -45,8 +46,9 @@ public class CPU {
     }
 
     public void process() {
-        DataBatch dataBatch = unProcessedData.getFirst();
         if (!unProcessedData.isEmpty()) {
+            System.out.println("c");
+            DataBatch dataBatch = unProcessedData.getFirst();
             if (startTick == -1){
                 startTick = currentTick;
             }
@@ -80,6 +82,7 @@ public class CPU {
 
     public void addBatch(DataBatch batch) {
         unProcessedData.add(batch);
+        System.out.println(unProcessedData);
     }
 
     public boolean haveUnProcessedData(){

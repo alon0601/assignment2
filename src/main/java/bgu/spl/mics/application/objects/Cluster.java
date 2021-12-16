@@ -19,9 +19,8 @@ public class Cluster {
      * Retrieves the single instance of this class.
      */
 	private static Cluster cluster = null;
-	ConcurrentLinkedDeque<CPU> CPUS;
+	private ConcurrentLinkedDeque<CPU> CPUS;
 	private Map<DataBatch,GPU> unProcessedData;
-	private Map<GPU,DataBatch> processedData;
 
 
 	public static Cluster getInstance() {
@@ -36,18 +35,23 @@ public class Cluster {
 		CPU cpu = CPUS.removeFirst();
 		cpu.addBatch(batch);
 		CPUS.addLast(cpu);
+		System.out.println("unpro");
 	}
 
 	public void processedData(DataBatch dataBatch){
+		System.out.println("pro");
 		GPU relevantGpu = this.unProcessedData.get(dataBatch);
 		relevantGpu.addProcessed(dataBatch);
 
 	}
 
+	public void addCpu(CPU cpu){
+		this.CPUS.add(cpu);
+	}
+
 	private Cluster(){
 		CPUS = new ConcurrentLinkedDeque<CPU>();
 		unProcessedData = new ConcurrentHashMap<>();
-		processedData = new ConcurrentHashMap<>();
 	}
 
 }

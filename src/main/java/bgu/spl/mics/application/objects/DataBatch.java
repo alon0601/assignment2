@@ -21,4 +21,8 @@ public class DataBatch {
     public int getStart_index() {
         return start_index;
     }
+
+    public String toString(){
+        return this.data + " " + this.start_index + System.lineSeparator();
+    }
 }

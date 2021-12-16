@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
+        String path = "C:\\Users\\alon5\\OneDrive\\Desktop\\example.json";
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -28,17 +28,84 @@ public class CRMSRunner {
             e.printStackTrace();
         }
         List<Thread> threads = new ArrayList<>();
-        List<Student> st = new ArrayList<>();
-        List<Model> modelSt = new ArrayList<>();
+
         Gson gson = new Gson();
         HashMap<Object, Object> json = gson.fromJson(bufferedReader, HashMap.class);
+
         Double dTickTime = (Double) json.get("TickTime");
         Double dDuration = (Double) json.get("Duration");
         int duration = dDuration.intValue();
         int tickTime = dTickTime.intValue();
         TimeService timeService = new TimeService(tickTime,duration);
         Thread threadTime = new Thread(timeService);
+
         ArrayList<Object> students = (ArrayList<Object>)json.get("Students");
+        List<Thread> studentsT = initStudents(students);
+
+        ArrayList<Object> gpus = (ArrayList<Object>) json.get("GPUS");
+        List<Thread> GPUST= initGPUS(gpus);
+        ;
+        ArrayList<Object>  cpus = (ArrayList<Object>) json.get("CPUS");
+        List<Thread> cpusT = initCPUS(cpus);
+
+        ArrayList<Object> conferences = (ArrayList<Object>) json.get("Conferences");
+        List<Thread> conferencesT = initConferences(conferences);
+
+        for(Thread t : GPUST)
+            t.start();
+        for(Thread t : cpusT)
+            t.start();
+        for (Thread t: conferencesT)
+            t.start();
+        for (Thread t : studentsT)
+            t.start();
+        threadTime.start();
+    }
+
+    public static List<Thread> initConferences(ArrayList<Object> conferences) {
+        List<Thread> conferencesT = new ArrayList<>();
+        for(int i = 0;i<conferences.size();i++){
+            LinkedTreeMap<Object,Object> conference = (LinkedTreeMap<Object, Object>) conferences.get(i);
+            Double date = (Double) conference.get("date");
+            ConfrenceInformation confrenceInformation = new ConfrenceInformation((String) conference.get("name"),date.intValue());
+            Thread t4 = new Thread(new ConferenceService(confrenceInformation));
+            conferencesT.add(t4);
+        }
+        return conferencesT;
+    }
+
+    public static List<Thread> initCPUS(ArrayList<Object> cpus) {
+        List<Thread> cpusT = new ArrayList<>();
+        for(int l = 0 ; l < cpus.size();l++){
+            Double d = (Double) cpus.get(l);
+            CPU cpu = new CPU(d.intValue());
+            Thread t1 = new Thread(new CPUService(cpu));
+            cpusT.add(t1);
+        }
+        return cpusT;
+    }
+
+    public static List<Thread> initGPUS(ArrayList<Object> gpus){
+        List<Thread> GPUST = new ArrayList<>();
+        for(int l = 0 ; l < gpus.size();l++){
+            GPU.Type type1;
+            if(gpus.get(l).equals("GTX1080"))
+                type1 = GPU.Type.GTX1080;
+            else if(gpus.get(l).equals("RTX2080"))
+                type1 = GPU.Type.RTX2080;
+            else
+                type1 = GPU.Type.RTX3090;
+            GPU gpu = new GPU(type1);
+            Thread t2 = new Thread(new GPUService(gpu));
+            GPUST.add(t2);
+        }
+        return GPUST;
+    }
+
+    public static List<Thread> initStudents(ArrayList<Object> students){
+        List<Student> st = new ArrayList<>();
+        List<Model> modelSt = new ArrayList<>();
+        List<Thread> studentsT = new ArrayList<>();
         for (int i = 0; i < students.size();i++){
             LinkedTreeMap<Object,Object> t = (LinkedTreeMap<Object, Object>)students.get(i);
             Object TempM = t.get("models");
@@ -64,46 +131,9 @@ public class CRMSRunner {
                 degree = Student.Degree.MSc;
             Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelSt);
             Thread t4 = new Thread(new StudentService(student));
-            threads.add(t4);
-            st.add(student);
-            System.out.println(student);
+            studentsT.add(t4);
         }
-        threads.add(threadTime);
-
-        List<GPU> gpus1 = new ArrayList<>();
-        ArrayList<Object> gpus = (ArrayList<Object>) json.get("GPUS");
-        for(int l = 0 ; l < gpus.size();l++){
-            GPU.Type type1;
-            if(gpus.get(l).equals("GTX1080"))
-                type1 = GPU.Type.GTX1080;
-            else if(gpus.get(l).equals("RTX2080"))
-                type1 = GPU.Type.RTX2080;
-            else
-                type1 = GPU.Type.RTX3090;
-            GPU gpu = new GPU(type1);
-            gpus1.add(gpu);
-            Thread t2 = new Thread(new GPUService(gpu));
-            threads.add(t2);
-        }
-        List<CPU> cpus1 = new ArrayList<>();
-        ArrayList<Object>  cpus = (ArrayList<Object>) json.get("CPUS");
-        for(int l = 0 ; l < gpus.size();l++){
-            Double d = (Double) cpus.get(l);
-            CPU cpu = new CPU(d.intValue());
-            Thread t1 = new Thread(new CPUService(cpu));
-            threads.add(t1);
-            cpus1.add(cpu);
-        }
-
-        ArrayList<Object> conferences = (ArrayList<Object>) json.get("Conferences");
-        for(int i = 0;i<conferences.size();i++){
-            LinkedTreeMap<Object,Object> conference = (LinkedTreeMap<Object, Object>) conferences.get(i);
-            Double date = (Double) conference.get("date");
-            ConfrenceInformation confrenceInformation = new ConfrenceInformation((String) conference.get("name"),date.intValue());
-            Thread t4 = new Thread(new ConferenceService(confrenceInformation));
-            threads.add(t4);
-        }
-        for(Thread t : threads)
-            t.start();
+        return studentsT;
     }
 }
+

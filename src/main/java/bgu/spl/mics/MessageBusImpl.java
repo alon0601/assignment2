@@ -101,7 +101,7 @@ public class MessageBusImpl implements MessageBus {
 				return future;
 			}
 		}
-		return null;
+		return new Future<>();
 	}
 
 	@Override

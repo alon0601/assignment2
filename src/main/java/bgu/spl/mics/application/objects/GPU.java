@@ -80,6 +80,7 @@ public class GPU {
             }
             else if(this.currentTick >= startProTime + ticksAmount){
                 this.processedData.remove(0);
+                System.out.println("b");
                 this.model.getData().updateProcess();
                 this.startProTime = -1;
                 this.freeCapacity++;
@@ -102,6 +103,7 @@ public class GPU {
             DataBatch batch = new DataBatch(data,this.indexBatch);
             this.indexBatch = this.indexBatch + 1000;
             cluster.unprocessedData(batch,this);
+            System.out.println("a");
         }
         freeCapacity = 0;
         if (indexBatch >= data.getSize()){
