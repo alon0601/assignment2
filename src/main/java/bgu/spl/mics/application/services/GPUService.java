@@ -41,7 +41,7 @@ public class GPUService extends MicroService {
                 this.gpu.trainModel();
             }
             if (training && this.gpu.finished()){
-                System.out.println(Thread.currentThread());
+                System.out.println(Thread.currentThread() + " " + this.gpu.getModel().getData().getSize());
                 training = false;
                 this.complete(this.currEvent,this.gpu.getModel());
                 currEvent = null;

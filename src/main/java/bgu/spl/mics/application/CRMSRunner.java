@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
+        String path = "C:\\Users\\alon5\\OneDrive\\Desktop\\example.json";
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -111,12 +111,11 @@ public class CRMSRunner {
 
     public static List<Thread> initStudents(ArrayList<Object> students){
         List<Student> st = new ArrayList<>();
-        List<Model> modelSt = new ArrayList<>();
         List<Thread> studentsT = new ArrayList<>();
         for (int i = 0; i < students.size();i++){
+            List<Model> modelss = new ArrayList<>();
             LinkedTreeMap<Object,Object> t = (LinkedTreeMap<Object, Object>)students.get(i);
-            Object TempM = t.get("models");
-            ArrayList<Object> models = (ArrayList<Object>) TempM;
+            ArrayList<Object> models = (ArrayList<Object>) t.get("models");
             for(int j = 0;j<models.size();j++) {
                 LinkedTreeMap<Object,Object> b = (LinkedTreeMap<Object, Object>) models.get(j);
                 Data.Type type1;
@@ -129,14 +128,14 @@ public class CRMSRunner {
                 Double size = (Double) b.get("size");
                 Data d = new Data(type1,size.intValue());
                 Model model = new Model((String)b.get("name"),d);
-                modelSt.add(model);
+                modelss.add(model);
             }
             Student.Degree degree;
             if(t.get("status").toString() == "PhD")
                 degree = Student.Degree.PhD;
             else
                 degree = Student.Degree.MSc;
-            Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelSt);
+            Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelss);
             StudentService s = new StudentService(student);
             Thread t4 = new Thread(s);
             studentsT.add(t4);
