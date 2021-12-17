@@ -3,6 +3,9 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
+import bgu.spl.mics.application.objects.Model;
+
+import java.util.List;
 
 /**
  * Conference service is in charge of
@@ -15,15 +18,27 @@ import bgu.spl.mics.application.objects.ConfrenceInformation;
  */
 public class ConferenceService extends MicroService {
     ConfrenceInformation confrenceInformation;
+    private int ticks;
+
     public ConferenceService(ConfrenceInformation confrenceInformation) {
         super("conferenceService");
         this.confrenceInformation = confrenceInformation;
-        this.initialize();
+        this.ticks = 0;
     }
 
     @Override
     protected void initialize() {
         // TODO Implement this
+        subscribeBroadcast(TickBroadcast.class,callback->{
+            ticks++;
+            if(ticks == this.confrenceInformation.getDate()){
+                sendBroadcast(new PublishConferenceBroadcast(this.confrenceInformation.getModels()));
+                this.terminate();
+            }
+        });
+        subscribeEvent(PublishResultsEvent.class,callback->{
+            confrenceInformation.addModels(callback.getModel());
+        });
 
     }
 }

@@ -9,4 +9,8 @@ public class PublishResultsEvent implements Event {
     public PublishResultsEvent(Model model){
         this.model = model;
     }
+
+    public Model getModel() {
+        return this.model;
+    }
 }

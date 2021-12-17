@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
 import java.util.Map;
@@ -94,13 +95,23 @@ public class MessageBusImpl implements MessageBus {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		synchronized (e.getClass()) {
 			if (eventQueue.get(e.getClass()) != null) {
-				BlockingDeque<MicroService> micros = eventQueue.get(e.getClass());
-				MicroService m = micros.poll();
-				Future<T> future = new Future<>();
-				microServiceMessages.get(m).add(e);
-				futureQueue.put(e, future);
-				micros.addLast(m);
-				return future;
+				if(e.getClass() != PublishResultsEvent.class) {
+					BlockingDeque<MicroService> micros = eventQueue.get(e.getClass());
+					MicroService m = micros.poll();
+					Future<T> future = new Future<>();
+					microServiceMessages.get(m).add(e);
+					futureQueue.put(e, future);
+					micros.addLast(m);
+					return future;
+				}
+				else{
+					BlockingDeque<MicroService> micros = eventQueue.get(e.getClass());
+					MicroService m = micros.getFirst();
+					Future<T> future = new Future<>();
+					microServiceMessages.get(m).add(e);
+					futureQueue.put(e, future);
+					return future;
+				}
 			}
 		}
 		return new Future<>();
