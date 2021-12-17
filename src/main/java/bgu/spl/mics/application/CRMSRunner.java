@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
+        String path = "C:\\Users\\alon5\\OneDrive\\Desktop\\example.json";
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -126,12 +126,12 @@ public class CRMSRunner {
             ArrayList<Object> models = (ArrayList<Object>) t.get("models");
             for(int j = 0;j<models.size();j++) {
                 LinkedTreeMap<Object,Object> b = (LinkedTreeMap<Object, Object>) models.get(j);
-                Data.Type type1;
-                if(b.get("type").toString() == "Images")
+                Data.Type type1 = null;
+                if(b.get("type").toString().toUpperCase().equals("IMAGES"))
                     type1 = Data.Type.Images;
-                else if(b.get("type").toString() == "Tabular")
+                else if(b.get("type").toString().toUpperCase().equals("TABULAR"))
                     type1 = Data.Type.Tabular;
-                else
+                else if(b.get("type").toString().toUpperCase().equals("TEXT"))
                     type1 = Data.Type.Text;
                 Double size = (Double) b.get("size");
                 Data d = new Data(type1,size.intValue());
