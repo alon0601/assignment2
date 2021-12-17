@@ -2,6 +2,7 @@ package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
+import bgu.spl.mics.application.services.ConferenceService;
 
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
@@ -106,7 +107,7 @@ public class MessageBusImpl implements MessageBus {
 				}
 				else{
 					BlockingDeque<MicroService> micros = eventQueue.get(e.getClass());
-					MicroService m = micros.getFirst();
+					MicroService m = minimumCon();
 					Future<T> future = new Future<>();
 					microServiceMessages.get(m).add(e);
 					futureQueue.put(e, future);
@@ -114,7 +115,18 @@ public class MessageBusImpl implements MessageBus {
 				}
 			}
 		}
-		return new Future<>();
+		return null;
+	}
+
+	public ConferenceService minimumCon(){
+		BlockingDeque<MicroService> micros = eventQueue.get(PublishResultsEvent.class);
+		ConferenceService m = (ConferenceService)micros.getFirst();
+		for (MicroService con:micros){
+			if (m.getDate() > ((ConferenceService)(con)).getDate()){
+				m = (ConferenceService)con;
+			}
+		}
+		return m;
 	}
 
 	@Override

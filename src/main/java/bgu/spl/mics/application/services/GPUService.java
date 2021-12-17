@@ -67,6 +67,7 @@ public class GPUService extends MicroService {
                 Random rand = new Random();
                 if (callback.getModel().getStudent().getStatus() == Student.Degree.MSc){
                     if (rand.nextInt(100) < 60){
+                        System.out.println("change to good" + callback.getModel().getName() + " " + Thread.currentThread());
                         callback.getModel().setResults(Model.Results.Good);
                     }
                     else

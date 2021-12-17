@@ -9,6 +9,7 @@ import bgu.spl.mics.application.objects.Student;
 
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -22,10 +23,18 @@ import java.util.List;
 public class StudentService extends MicroService {
 
     private Student student;
+    private boolean working;
+    private int ticks;
+    private Future<Model> currModel;
+    private boolean sendTest;
 
     public StudentService(Student student) {
         super("studentService");
         this.student = student;
+        this.working = false;
+        this.ticks = 0;
+        currModel = null;
+        sendTest = false;
     }
 
     @Override
@@ -41,15 +50,58 @@ public class StudentService extends MicroService {
                 }
             }
         });
-        for (Model model:student.getModels()){
-            model.setStudent(this.student);
-            Future<Model> trainModel= sendEvent(new TrainModelEvent(model));
-            model.setStatus(Model.Status.preTrained);
-            Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));
-            if (testModel.get().getResults() == Model.Results.Good){
-                System.out.println("good");
-                sendEvent(new PublishResultsEvent(testModel.get()));
+        this.subscribeBroadcast(TickBroadcast.class,callback->{
+            ticks++;
+            if (!this.working && !this.student.getModels().isEmpty()){
+                this.working = true;
+                Model model = student.getModels().get(0);
+                model.setStudent(this.student);
+                model.setStatus(Model.Status.Training);
+                while (currModel == null) {
+                    currModel = sendEvent(new TrainModelEvent(model));
+                }
             }
-        }
+            else if(!this.student.getModels().isEmpty()){
+                Model model = currModel.get(100, TimeUnit.MILLISECONDS);
+                if (model != null){ //make sure its change
+                    if (!sendTest) {
+                        sendEvent(new TestModelEvent(model));
+                        sendTest = true;
+                    }
+                    System.out.println(model.getResults() + " " + model.getName());
+                    if (model.getResults() == Model.Results.Good){
+                        System.out.println("good reso");
+                        sendEvent(new PublishResultsEvent(model));
+                        this.student.addGoodModel(model);
+                        this.student.getModels().remove(model);
+                        this.working = false;
+                        this.currModel = null;
+                        this.sendTest = false;
+                    }
+                    if (model.getResults() == Model.Results.Bad) {
+                        System.out.println("bad reso");
+                        this.student.getModels().remove(model);
+                        this.working = false;
+                        this.currModel = null;
+                        this.sendTest = false;
+
+                    }
+                }
+            }
+
+        });
+//        for (Model model:student.getModels()){
+//            model.setStudent(this.student);
+//            Future<Model> trainModel = null;
+//            while (trainModel == null) {
+//                trainModel = sendEvent(new TrainModelEvent(model));
+//            }
+//            model.setStatus(Model.Status.preTrained);
+//            Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));
+//            if (testModel.get().getResults() == Model.Results.Good){
+//                System.out.println("good");
+//                sendEvent(new PublishResultsEvent(testModel.get()));
+//            }
+//        }
     }
 }

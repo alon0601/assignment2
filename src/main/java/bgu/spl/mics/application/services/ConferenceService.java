@@ -26,6 +26,10 @@ public class ConferenceService extends MicroService {
         this.ticks = 0;
     }
 
+    public int getDate(){
+        return this.confrenceInformation.getDate();
+    }
+
     @Override
     protected void initialize() {
         // TODO Implement this
@@ -33,10 +37,12 @@ public class ConferenceService extends MicroService {
             ticks++;
             if(ticks == this.confrenceInformation.getDate()){
                 sendBroadcast(new PublishConferenceBroadcast(this.confrenceInformation.getModels()));
+                System.out.println(this.confrenceInformation.getModels() + " " + Thread.currentThread());
                 this.terminate();
             }
         });
         subscribeEvent(PublishResultsEvent.class,callback->{
+            System.out.println(callback.getModel().getName() + " entered to: " + Thread.currentThread());
             confrenceInformation.addModels(callback.getModel());
         });
 

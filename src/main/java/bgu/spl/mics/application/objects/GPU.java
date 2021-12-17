@@ -66,6 +66,7 @@ public class GPU {
         this.model = model;
         this.model.setStatus(Model.Status.Training);
         this.haveUnProcessData = true;
+        this.isFinished = false;
     }
 
     public Model getModel(){

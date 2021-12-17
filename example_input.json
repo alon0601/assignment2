@@ -15,7 +15,7 @@
                 {
                     "name": "ResNet9000",
                     "type": "images",
-                    "size": 200000
+                    "size": 20000
                 },
                 {
                     "name": "LessEfficientNet",
@@ -25,7 +25,7 @@
                 {
                     "name": "DensestNet",
                     "type": "images",
-                    "size": 200000
+                    "size": 20000
                 }
             ]
 
@@ -58,12 +58,12 @@
                 {
                     "name": "GPT4",
                     "type": "Text",
-                    "size": 1000000
+                    "size": 20000
                 },
                 {
                     "name": "GPT5",
                     "type": "Text",
-                    "size": 200000
+                    "size": 20000
                 },
                 {
                     "name": "GPT10",
@@ -87,17 +87,17 @@
                 {
                     "name": "GNN",
                     "type": "Tabular",
-                    "size": 1000000
+                    "size": 20000
                 },
                 {
                     "name": "MoreStyleGAN",
                     "type": "Images",
-                    "size": 100000
+                    "size": 20000
                 },
                 {
                     "name": "ConditionalGAN",
                     "type": "Images",
-                    "size": 500000
+                    "size": 20000
                 }
             ]
 
@@ -116,7 +116,7 @@
                 {
                     "name": "VIT2",
                     "type": "images",
-                    "size": 1000000
+                    "size": 20000
                 },
                 {
                     "name": "MuchMoreEfficientNet",
@@ -126,7 +126,7 @@
                 {
                     "name": "DenserNet",
                     "type": "images",
-                    "size": 100000
+                    "size": 20000
                 }
             ]
 
@@ -136,7 +136,7 @@
     "CPUS": [32,32,32,16,16,16,16],
     "Conferences":
     [
-        {"name": "ICML", "date": 2000},
+        {"name": "ICML", "date": 200},
         {"name": "NeurIPS", "date": 2500},
         {"name": "CVPR", "date": 3000},
         {"name": "ECCV", "date": 4000},

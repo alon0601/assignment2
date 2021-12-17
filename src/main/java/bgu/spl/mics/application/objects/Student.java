@@ -2,7 +2,10 @@ package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.application.services.StudentService;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Passive object representing single student.
@@ -22,6 +25,7 @@ public class Student {
     private int publications;
     private int papersRead;
     private List<Model> models;
+    private ConcurrentLinkedDeque<Model> goodModels;
 
     public String getName() {
         return name;
@@ -46,10 +50,15 @@ public class Student {
         this.publications = 0;
         this.papersRead = 0;
         this.models = models;
+        this.goodModels = new ConcurrentLinkedDeque<>();
     }
 
     public List<Model> getModels(){
         return this.models;
+    }
+
+    public void addGoodModel(Model model){
+        this.goodModels.addLast(model);
     }
 
     public int getPublications() {
