@@ -6,6 +6,9 @@ import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.GPU;
 import bgu.spl.mics.application.objects.Model;
+import bgu.spl.mics.application.objects.Student;
+
+import java.util.Random;
 
 /**
  * GPU service is responsible for handling the
@@ -41,18 +44,46 @@ public class GPUService extends MicroService {
                 this.gpu.trainModel();
             }
             if (training && this.gpu.finished()){
-                System.out.println(Thread.currentThread() + " " + this.gpu.getModel().getData().getSize());
+                System.out.println(Thread.currentThread() + " finished with model: " + this.gpu.getModel().getName());
                 training = false;
                 this.complete(this.currEvent,this.gpu.getModel());
                 currEvent = null;
             }
         });
         subscribeEvent(TrainModelEvent.class,callback->{
-            System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName());
-            this.gpu.setModel(callback.getModel());
-            this.gpu.sendData();
-            this.training = true;
-            this.currEvent = callback;
+            if (this.currEvent == null) {
+                System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName());
+                this.gpu.setModel(callback.getModel());
+                this.gpu.sendData();
+                this.training = true;
+                this.currEvent = callback;
+            }
+            else{
+                this.sendEvent(callback);
+            }
+        });
+        subscribeEvent(TestModelEvent.class,callback->{
+            if (this.currEvent == null){
+                Random rand = new Random();
+                if (callback.getModel().getStudent().getStatus() == Student.Degree.MSc){
+                    if (rand.nextInt(100) < 60){
+                        callback.getModel().setResults(Model.Results.Good);
+                    }
+                    else
+                        callback.getModel().setResults(Model.Results.Bad);
+                }
+                else{
+                    if (rand.nextInt(100) < 80){
+                        callback.getModel().setResults(Model.Results.Good);
+                    }
+                    else
+                        callback.getModel().setResults(Model.Results.Bad);
+                }
+                complete(callback,callback.getModel());
+            }
+            else{
+                sendEvent(callback);
+            }
         });
 
     }

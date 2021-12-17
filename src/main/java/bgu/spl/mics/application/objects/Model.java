@@ -22,6 +22,14 @@ public class Model {
         this.data = data;
     }
 
+    public void setResults(Results results) {
+        this.results = results;
+    }
+
+    public void setStudent(Student s){
+        this.student = s;
+    }
+
     public void setStatus(Status status){
         this.status = status;
     }

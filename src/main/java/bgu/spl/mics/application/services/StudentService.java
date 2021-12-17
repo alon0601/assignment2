@@ -41,8 +41,8 @@ public class StudentService extends MicroService {
                 }
             }
         });
-        System.out.println(student.getModels().get(0));
         for (Model model:student.getModels()){
+            model.setStudent(this.student);
             Future<Model> trainModel= sendEvent(new TrainModelEvent(model));
             model.setStatus(Model.Status.preTrained);
             Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));

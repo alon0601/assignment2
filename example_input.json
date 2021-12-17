@@ -10,7 +10,7 @@
                 {
                     "name": "YOLO10",
                     "type": "images",
-                    "size": 200000
+                    "size": 10000
                 },
                 {
                     "name": "ResNet9000",
@@ -39,7 +39,7 @@
                 {
                     "name": "VIT",
                     "type": "images",
-                    "size": 100000000
+                    "size": 11000
                 }
             ]
 
@@ -53,7 +53,7 @@
                 {
                     "name": "Bert",
                     "type": "Text",
-                    "size": 1000000
+                    "size": 12000
                 },
                 {
                     "name": "GPT4",
@@ -82,7 +82,7 @@
                 {
                     "name": "Percepetron",
                     "type": "Tabular",
-                    "size": 1000000
+                    "size": 12000
                 },
                 {
                     "name": "GNN",
@@ -111,7 +111,7 @@
                 {
                     "name": "YOLO9000",
                     "type": "images",
-                    "size": 100000
+                    "size": 13000
                 },
                 {
                     "name": "VIT2",

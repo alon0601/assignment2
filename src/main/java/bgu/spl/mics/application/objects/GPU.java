@@ -82,13 +82,9 @@ public class GPU {
                 this.model.getData().updateProcess();
                 this.startProTime = -1;
                 this.freeCapacity++;
-                System.out.println(this.model.getName());
-                System.out.println(this.model.getData().getProcessed());
-                System.out.println(this.model.getData().getSize());
             }
         }
         if (this.model.getData().getProcessed() >= this.model.getData().getSize()){
-            System.out.println("where am i?" + Thread.currentThread());
             this.isFinished = true;
             this.haveUnProcessData = false;
             this.model.setStatus(Model.Status.Trained);

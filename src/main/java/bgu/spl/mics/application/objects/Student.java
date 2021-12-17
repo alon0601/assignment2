@@ -23,7 +23,23 @@ public class Student {
     private int papersRead;
     private List<Model> models;
 
-    public Student(String name,String department,Degree status,List<Model> models){
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public Degree getStatus() {
+        return status;
+    }
+
+    public int getPapersRead() {
+        return papersRead;
+    }
+
+    public Student(String name, String department, Degree status, List<Model> models){
         this.name = name;
         this.department = department;
         this.status = status ;

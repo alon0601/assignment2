@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String path = "C:\\Users\\alon5\\OneDrive\\Desktop\\example.json";
+        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -59,7 +59,7 @@ public class CRMSRunner {
             t.start();
         for (Thread t : studentsT) {
             try {
-                t.wait(500);
+                t.wait(20000);
             }
             catch (Exception e){
 
