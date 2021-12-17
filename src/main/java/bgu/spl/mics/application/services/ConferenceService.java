@@ -13,17 +13,15 @@ import bgu.spl.mics.application.objects.ConfrenceInformation;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
+
 public class ConferenceService extends MicroService {
     ConfrenceInformation confrenceInformation;
     public ConferenceService(ConfrenceInformation confrenceInformation) {
         super("conferenceService");
         this.confrenceInformation = confrenceInformation;
-        this.initialize();
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
-
     }
 }
