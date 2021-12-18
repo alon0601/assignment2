@@ -38,13 +38,12 @@ public class GPUService extends MicroService {
     protected void initialize() {
 
         subscribeBroadcast(TickBroadcast.class,callback-> {
-            if (gpu.getModel() != null) { //checking - delete later
-                System.out.println("gpu working on: " + gpu.getModel().getName() + " pro: " + gpu.getModel().getData().getProcessed() + "the time: " + ticks);
+            if (currEvent != null) { //checking - delete later
+                System.out.println("gpu " + Thread.currentThread() + " working on: " + gpu.getModel().getName() + " pro: " + gpu.getModel().getData().getProcessed() + "the time: " + ticks + " am i tranining? " + training);
             }
             this.ticks++;
             this.gpu.setCurrentTick(ticks);
             if (training) {
-                this.gpu.sendData();
                 this.gpu.trainModel();
             }
             if (training && this.gpu.finished()){
@@ -71,6 +70,7 @@ public class GPUService extends MicroService {
         subscribeEvent(TestModelEvent.class,callback->{
             if (this.currEvent == null){
                 Random rand = new Random();
+                System.out.println(Thread.currentThread() + " is testing - " + callback.getModel().getName());
                 if (callback.getModel().getStudent().getStatus() == Student.Degree.MSc){
                     if (rand.nextInt(100) < 60){
                         System.out.println("change to good" + callback.getModel().getName() + " " + Thread.currentThread());
