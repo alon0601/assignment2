@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.Data;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
+import com.google.gson.annotations.Expose;
 
 
 import java.util.List;
@@ -52,60 +53,43 @@ public class StudentService extends MicroService {
         });
         this.subscribeBroadcast(TickBroadcast.class,callback->{
             ticks++;
-            if (!this.working && !this.student.getModels().isEmpty()){
-                this.working = true;
-                Model model = student.getModels().get(0);
-                model.setStudent(this.student);
-                model.setStatus(Model.Status.Training);
-                while (currModel == null) {
-                    currModel = sendEvent(new TrainModelEvent(model));
+            if (!this.student.getModels().isEmpty()) {
+                if (!this.working) {
+                    this.working = true;
+                    Model model = student.getModels().get(0);
+                    model.setStudent(this.student);
+                    model.setStatus(Model.Status.Training);
+                    while (currModel == null) {
+                        currModel = sendEvent(new TrainModelEvent(model));
+                    }
+                } else {
+                    Model model = currModel.get(1, TimeUnit.MILLISECONDS);
+                    if (model != null) { //make sure its change
+                        if (!sendTest) {
+                            sendEvent(new TestModelEvent(model));
+                            sendTest = true;
+                        }
+                        if (model.getResults() == Model.Results.Good) {
+                            sendEvent(new PublishResultsEvent(model));
+                            this.student.addGoodModel(model);
+                            this.student.getModels().remove(model);
+                            this.working = false;
+                            this.currModel = null;
+                            this.sendTest = false;
+                        }
+                        if (model.getResults() == Model.Results.Bad) {
+                            this.student.addBadModel(model);
+                            this.student.getModels().remove(model);
+                            this.working = false;
+                            this.currModel = null;
+                            this.sendTest = false;
+                        }
+                    }
                 }
             }
-            else if(!this.student.getModels().isEmpty()){
-                Model model = currModel.get(100, TimeUnit.MILLISECONDS);
-                if (model != null){ //make sure its change
-                    if (!sendTest) {
-                        sendEvent(new TestModelEvent(model));
-                        sendTest = true;
-                    }
-                    if (model.getResults() == Model.Results.Good){
-                        System.out.println("good reso");
-                        sendEvent(new PublishResultsEvent(model));
-                        this.student.addGoodModel(model);
-                        this.student.getModels().remove(model);
-                        this.working = false;
-                        this.currModel = null;
-                        this.sendTest = false;
-                    }
-                    if (model.getResults() == Model.Results.Bad) {
-                        System.out.println("bad reso");
-                        this.student.getModels().remove(model);
-                        this.working = false;
-                        this.currModel = null;
-                        this.sendTest = false;
-
-                    }
-                }
-            }
-
         });
-
         subscribeBroadcast(TerminateAllBroadcast.class,callback->{
             this.terminate();
         });
-
-//        for (Model model:student.getModels()){
-//            model.setStudent(this.student);
-//            Future<Model> trainModel = null;
-//            while (trainModel == null) {
-//                trainModel = sendEvent(new TrainModelEvent(model));
-//            }
-//            model.setStatus(Model.Status.preTrained);
-//            Future<Model> testModel = sendEvent(new TestModelEvent(trainModel.get()));
-//            if (testModel.get().getResults() == Model.Results.Good){
-//                System.out.println("good");
-//                sendEvent(new PublishResultsEvent(testModel.get()));
-//            }
-//        }
     }
 }

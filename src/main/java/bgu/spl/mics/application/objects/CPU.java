@@ -19,6 +19,7 @@ public class CPU {
     private Cluster cluster;
     private int currentTick;//not sure if we can do this
     private int startTick;
+    private int ticksWork;
 
     final private Object lock = new Object();
 
@@ -28,6 +29,7 @@ public class CPU {
         this.isProcessing = false;
         cluster = Cluster.getInstance();
         startTick = -1;
+        ticksWork = 0;
         this.cluster.addCpu(this);
     }
 
@@ -40,6 +42,10 @@ public class CPU {
     }
 
     public void getData() {
+    }
+
+    public int getTicksWork(){
+        return ticksWork;
     }
 
     public boolean isProcessing() {
@@ -55,18 +61,21 @@ public class CPU {
             else {
                 if (dataBatch.getData().getType() == Data.Type.Images) {
                     if (this.currentTick - startTick >= (32 / cors) * 4) {
+                        ticksWork = ticksWork + (this.currentTick - startTick);
                         sendData(dataBatch);
                         startTick = -1;
                     }
                 }
                 if (dataBatch.getData().getType() == Data.Type.Text) {
                     if (this.currentTick - startTick >= (32 / cors) * 2) {
+                        ticksWork = ticksWork + (this.currentTick - startTick);
                         sendData(dataBatch);
                         startTick = -1;
                     }
                 }
                 if (dataBatch.getData().getType() == Data.Type.Tabular) {
                     if (this.currentTick - startTick >= (32 / cors)) {
+                        ticksWork = ticksWork + (this.currentTick - startTick);
                         sendData(dataBatch);
                         startTick = -1;
                     }

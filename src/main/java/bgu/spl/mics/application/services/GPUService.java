@@ -38,16 +38,13 @@ public class GPUService extends MicroService {
     protected void initialize() {
 
         subscribeBroadcast(TickBroadcast.class,callback-> {
-            if (currEvent != null) { //checking - delete later
-                System.out.println("gpu " + Thread.currentThread() + " working on: " + gpu.getModel().getName() + " pro: " + gpu.getModel().getData().getProcessed() + "the time: " + ticks + " am i tranining? " + training);
-            }
             this.ticks++;
             this.gpu.setCurrentTick(ticks);
             if (training) {
                 this.gpu.trainModel();
             }
             if (training && this.gpu.finished()){
-                System.out.println(Thread.currentThread() + " finished with model: " + this.gpu.getModel().getName());
+                System.out.println(Thread.currentThread() + " finished with model: " + this.gpu.getModel().getName() + " at time: " + ticks);
                 training = false;
                 this.complete(this.currEvent,this.gpu.getModel());
                 currEvent = null;
@@ -56,7 +53,7 @@ public class GPUService extends MicroService {
 
         subscribeEvent(TrainModelEvent.class,callback->{
             if (this.currEvent == null) {
-                System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName());
+                System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName() + " at time: " + ticks);
                 this.gpu.setModel(callback.getModel());
                 this.gpu.sendData();
                 this.training = true;
@@ -70,10 +67,9 @@ public class GPUService extends MicroService {
         subscribeEvent(TestModelEvent.class,callback->{
             if (this.currEvent == null){
                 Random rand = new Random();
-                System.out.println(Thread.currentThread() + " is testing - " + callback.getModel().getName());
+                System.out.println(Thread.currentThread() + " is testing - " + callback.getModel().getName() + " at time: " + ticks);
                 if (callback.getModel().getStudent().getStatus() == Student.Degree.MSc){
                     if (rand.nextInt(100) < 60){
-                        System.out.println("change to good" + callback.getModel().getName() + " " + Thread.currentThread());
                         callback.getModel().setResults(Model.Results.Good);
                     }
                     else
@@ -94,6 +90,7 @@ public class GPUService extends MicroService {
         });
 
         subscribeBroadcast(TerminateAllBroadcast.class,callback->{
+            this.gpu.SendGpuTimeToCluster();
             this.terminate();
         });
 

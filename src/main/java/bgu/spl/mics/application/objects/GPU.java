@@ -29,6 +29,7 @@ public class GPU {
     private int indexBatch;
     private int startProTime;
     private int ticksAmount;
+    private int ticksWorked;
 
 
     public GPU(Type type){
@@ -37,6 +38,7 @@ public class GPU {
         this.startProTime = -1;
         this.processedData = new ArrayList<>();
         setFreeCapacity();
+        ticksWorked = 0;
     }
 
     public void setFreeCapacity() {
@@ -74,18 +76,20 @@ public class GPU {
     public Model getModel(){
         return this.model;
     }
+
     public void trainModel() {
         synchronized (this) {
             if (!this.processedData.isEmpty()) {
                 if (this.startProTime == -1) {
                     startProTime = this.currentTick;
-                } else if (this.currentTick >= startProTime + ticksAmount) {
+                }
+                else if (this.currentTick > startProTime + ticksAmount) {
+                    ticksWorked = ticksAmount + ticksWorked;
                     this.processedData.remove(0);
                     this.model.getData().updateProcess();
                     this.startProTime = -1;
                     this.freeCapacity++;
                     sendData();
-                    System.out.println("gpu " + Thread.currentThread() + " working on: " + model.getName() + " pro: " + model.getData().getProcessed() + " from:" + model.getData().getSize() + " the time: " + currentTick);
                 }
             }
             if (this.model.getData().getProcessed() >= this.model.getData().getSize()) {
@@ -102,7 +106,7 @@ public class GPU {
 
     public void sendData(){
         Data data = model.getData();
-        for (int i = 0; i < freeCapacity && indexBatch < data.getSize(); i++){
+        for (int i = 0; i < freeCapacity && indexBatch <= data.getSize(); i++){
             DataBatch batch = new DataBatch(data,this.indexBatch);
             this.indexBatch = this.indexBatch + 1000;
             cluster.unprocessedData(batch,this);
@@ -120,8 +124,14 @@ public class GPU {
     @Override
     public String toString(){
         return "type : " + this.type + System.lineSeparator();
+    }
 
+    public int getTimeWorked(){
+        return this.ticksWorked;
+    }
 
+    public void SendGpuTimeToCluster(){ //sending the time the gpu worked to the cluster
+        cluster.addGpuTime(this.ticksWorked);
     }
 
 }
