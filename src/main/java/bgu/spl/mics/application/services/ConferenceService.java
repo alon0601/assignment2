@@ -36,7 +36,7 @@ public class ConferenceService extends MicroService {
         subscribeBroadcast(TickBroadcast.class,callback->{
             ticks++;
             if(ticks == this.confrenceInformation.getDate()){
-                sendBroadcast(new PublishConferenceBroadcast(this.confrenceInformation.getModels()));
+                //sendBroadcast(new PublishConferenceBroadcast(this.confrenceInformation.getModels()));
                 System.out.println(this.confrenceInformation.getModels() + " " + Thread.currentThread());
                 this.terminate();
             }
@@ -44,6 +44,10 @@ public class ConferenceService extends MicroService {
         subscribeEvent(PublishResultsEvent.class,callback->{
             System.out.println(callback.getModel().getName() + " entered to: " + Thread.currentThread());
             confrenceInformation.addModels(callback.getModel());
+        });
+
+        subscribeBroadcast(TerminateAllBroadcast.class,callback->{
+            this.terminate();
         });
 
     }
