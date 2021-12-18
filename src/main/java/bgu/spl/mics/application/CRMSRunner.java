@@ -57,21 +57,21 @@ public class CRMSRunner {
         for(Thread t : cpusT)
             t.start();
         for (Thread t: conferencesT){
-            try {
-                t.wait(20000);
-            }
-            catch (Exception e){
-
-            }
+//            try {
+//                t.wait(20000);
+//            }
+//            catch (Exception e){
+//
+//            }
             t.start();
         }
         for (Thread t : studentsT) {
-            try {
-                t.wait(20000);
-            }
-            catch (Exception e){
-
-            }
+//            try {
+//                t.wait(20000);
+//            }
+//            catch (Exception e){
+//
+//            }
             t.start();
         }
         threadTime.start();

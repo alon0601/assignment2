@@ -137,7 +137,7 @@
     "Conferences":
     [
         {"name": "ICML", "date": 200},
-        {"name": "NeurIPS", "date": 2500},
+        {"name": "NeurIPS", "date": 1000},
         {"name": "CVPR", "date": 3000},
         {"name": "ECCV", "date": 4000},
         {"name": "AISTATS", "date": 5000}
