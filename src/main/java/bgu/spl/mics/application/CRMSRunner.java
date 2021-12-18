@@ -37,45 +37,52 @@ public class CRMSRunner {
         Double dDuration = (Double) json.get("Duration");
         int duration = dDuration.intValue();
         int tickTime = dTickTime.intValue();
-        TimeService timeService = new TimeService(tickTime,duration);
-        Thread threadTime = new Thread(timeService);
 
+
+        //init timeService
+        Thread threadTime = initTimeService(duration,tickTime);
+
+
+        //init students
         ArrayList<Object> students = (ArrayList<Object>)json.get("Students");
         List<Thread> studentsT = initStudents(students);
 
+
+        //init gpus
         ArrayList<Object> gpus = (ArrayList<Object>) json.get("GPUS");
         List<Thread> GPUST= initGPUS(gpus);
-        ;
+
+
+        //init cpus
         ArrayList<Object>  cpus = (ArrayList<Object>) json.get("CPUS");
         List<Thread> cpusT = initCPUS(cpus);
 
+
+        //init conferences
         ArrayList<Object> conferences = (ArrayList<Object>) json.get("Conferences");
         List<Thread> conferencesT = initConferences(conferences);
+
 
         for(Thread t : GPUST)
             t.start();
         for(Thread t : cpusT)
             t.start();
         for (Thread t: conferencesT){
-//            try {
-//                t.wait(20000);
-//            }
-//            catch (Exception e){
-//
-//            }
             t.start();
         }
         for (Thread t : studentsT) {
-//            try {
-//                t.wait(20000);
-//            }
-//            catch (Exception e){
-//
-//            }
             t.start();
         }
         threadTime.start();
     }
+
+    public static Thread initTimeService(int duration,int tickTime){
+        TimeService timeService = new TimeService(tickTime,duration);
+        Thread t = new Thread(timeService);
+        return t;
+    }
+
+
 
     public static List<Thread> initConferences(ArrayList<Object> conferences) {
         LinkedList<Thread> conferencesT = new LinkedList<>();
@@ -88,6 +95,7 @@ public class CRMSRunner {
         }
         return conferencesT;
     }
+
 
     public static List<Thread> initCPUS(ArrayList<Object> cpus) {
         List<Thread> cpusT = new ArrayList<>();
@@ -151,4 +159,8 @@ public class CRMSRunner {
         return studentsT;
     }
 }
+
+
+
+
 

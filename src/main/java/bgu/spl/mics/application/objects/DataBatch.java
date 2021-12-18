@@ -23,6 +23,6 @@ public class DataBatch {
     }
 
     public String toString(){
-        return this.data + " " + this.start_index + System.lineSeparator();
+        return this.data + " start index " + this.start_index + System.lineSeparator();
     }
 }
