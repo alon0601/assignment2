@@ -68,7 +68,6 @@ public class StudentService extends MicroService {
                         sendEvent(new TestModelEvent(model));
                         sendTest = true;
                     }
-                    System.out.println(model.getResults() + " " + model.getName());
                     if (model.getResults() == Model.Results.Good){
                         System.out.println("good reso");
                         sendEvent(new PublishResultsEvent(model));
@@ -90,6 +89,11 @@ public class StudentService extends MicroService {
             }
 
         });
+
+        subscribeBroadcast(TerminateAllBroadcast.class,callback->{
+            this.terminate();
+        });
+
 //        for (Model model:student.getModels()){
 //            model.setStudent(this.student);
 //            Future<Model> trainModel = null;

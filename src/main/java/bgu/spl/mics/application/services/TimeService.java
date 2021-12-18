@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.TerminateAllBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
@@ -22,6 +23,7 @@ public class TimeService extends MicroService{
 	private int tickTime;
 	private int currentTime;
 	private int duration;
+	private boolean stop;
 
 //	public static TimeService getInstance(){
 //		if (timeService == null)
@@ -34,6 +36,7 @@ public class TimeService extends MicroService{
 		this.tickTime = tickTime;
 		this.duration = duration;
 		currentTime = 1;
+		stop = false;
 	}
 
 	public int getCurrentTime() {
@@ -51,7 +54,8 @@ public class TimeService extends MicroService{
 	}
 
 	private void closeProgram(){ // do this later
-
+		this.sendBroadcast(new TerminateAllBroadcast());
+		stop = true;
 	}
 
 	@Override
@@ -61,9 +65,17 @@ public class TimeService extends MicroService{
 			@Override
 			public void run() {
 				tick();
+				if (stop) {
+					timer.cancel();
+				}
+
 			}
 		};
 		timer.schedule(tick,0,tickTime);
+
+		subscribeBroadcast(TerminateAllBroadcast.class,callback->{
+			this.terminate();
+		});
 	}
 
 }

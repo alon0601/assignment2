@@ -36,7 +36,11 @@ public class GPUService extends MicroService {
 
     @Override
     protected void initialize() {
+
         subscribeBroadcast(TickBroadcast.class,callback-> {
+            if (gpu.getModel() != null) { //checking - delete later
+                System.out.println("gpu working on: " + gpu.getModel().getName() + " pro: " + gpu.getModel().getData().getProcessed() + "the time: " + ticks);
+            }
             this.ticks++;
             this.gpu.setCurrentTick(ticks);
             if (training) {
@@ -50,6 +54,7 @@ public class GPUService extends MicroService {
                 currEvent = null;
             }
         });
+
         subscribeEvent(TrainModelEvent.class,callback->{
             if (this.currEvent == null) {
                 System.out.println("started training" + Thread.currentThread() + "with model " + callback.getModel().getName());
@@ -62,6 +67,7 @@ public class GPUService extends MicroService {
                 this.sendEvent(callback);
             }
         });
+
         subscribeEvent(TestModelEvent.class,callback->{
             if (this.currEvent == null){
                 Random rand = new Random();
@@ -85,6 +91,10 @@ public class GPUService extends MicroService {
             else{
                 sendEvent(callback);
             }
+        });
+
+        subscribeBroadcast(TerminateAllBroadcast.class,callback->{
+            this.terminate();
         });
 
     }
