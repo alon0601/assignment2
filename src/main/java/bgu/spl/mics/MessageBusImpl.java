@@ -101,7 +101,7 @@ public class MessageBusImpl implements MessageBus {
 					MicroService m = micros.poll();
 					Future<T> future = new Future<>();
 					microServiceMessages.get(m).add(e);
-					futureQueue.put(e, future);
+					futureQueue.putIfAbsent(e, future);
 					micros.addLast(m);
 					return future;
 				}
@@ -110,7 +110,7 @@ public class MessageBusImpl implements MessageBus {
 					MicroService m = minimumCon();
 					Future<T> future = new Future<>();
 					microServiceMessages.get(m).add(e);
-					futureQueue.put(e, future);
+					futureQueue.putIfAbsent(e, future);
 					return future;
 				}
 			}
@@ -118,7 +118,7 @@ public class MessageBusImpl implements MessageBus {
 		return null;
 	}
 
-	public ConferenceService minimumCon(){
+	private ConferenceService minimumCon(){
 		BlockingDeque<MicroService> micros = eventQueue.get(PublishResultsEvent.class);
 		ConferenceService m = (ConferenceService)micros.getFirst();
 		for (MicroService con:micros){

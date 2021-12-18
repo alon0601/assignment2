@@ -74,24 +74,25 @@ public class GPU {
     public Model getModel(){
         return this.model;
     }
-
-    public void trainModel(){
-        if (!this.processedData.isEmpty()){
-            if (this.startProTime == -1){
-                startProTime = this.currentTick;
+    public void trainModel() {
+        synchronized (this) {
+            if (!this.processedData.isEmpty()) {
+                if (this.startProTime == -1) {
+                    startProTime = this.currentTick;
+                } else if (this.currentTick >= startProTime + ticksAmount) {
+                    this.processedData.remove(0);
+                    this.model.getData().updateProcess();
+                    this.startProTime = -1;
+                    this.freeCapacity++;
+                    sendData();
+                    System.out.println("gpu " + Thread.currentThread() + " working on: " + model.getName() + " pro: " + model.getData().getProcessed() + " from:" + model.getData().getSize() + " the time: " + currentTick);
+                }
             }
-            else if(this.currentTick >= startProTime + ticksAmount){
-                this.processedData.remove(0);
-                this.model.getData().updateProcess();
-                this.startProTime = -1;
-                this.freeCapacity++;
-                sendData();
+            if (this.model.getData().getProcessed() >= this.model.getData().getSize()) {
+                this.isFinished = true;
+                this.haveUnProcessData = false;
+                this.model.setStatus(Model.Status.Trained);
             }
-        }
-        if (this.model.getData().getProcessed() >= this.model.getData().getSize()){
-            this.isFinished = true;
-            this.haveUnProcessData = false;
-            this.model.setStatus(Model.Status.Trained);
         }
     }
 
