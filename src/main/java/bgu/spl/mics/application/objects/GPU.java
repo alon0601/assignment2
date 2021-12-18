@@ -65,6 +65,8 @@ public class GPU {
     public void setModel(Model model){
         this.model = model;
         this.model.setStatus(Model.Status.Training);
+        this.indexBatch = 0;
+        this.setFreeCapacity();
         this.haveUnProcessData = true;
         this.isFinished = false;
     }
@@ -83,6 +85,7 @@ public class GPU {
                 this.model.getData().updateProcess();
                 this.startProTime = -1;
                 this.freeCapacity++;
+                sendData();
             }
         }
         if (this.model.getData().getProcessed() >= this.model.getData().getSize()){
