@@ -42,11 +42,13 @@ public class CRMSRunner {
 
         //init timeService
         Thread threadTime = initTimeService(duration,tickTime);
+        ArrayList<Student> realStudents = new ArrayList<>();
+        ArrayList<ConfrenceInformation> realCon = new ArrayList<>();
 
 
         //init students
         ArrayList<Object> students = (ArrayList<Object>)json.get("Students");
-        List<Thread> studentsT = initStudents(students);
+        List<Thread> studentsT = initStudents(students,realStudents);
 
 
         //init gpus
@@ -61,7 +63,7 @@ public class CRMSRunner {
 
         //init conferences
         ArrayList<Object> conferences = (ArrayList<Object>) json.get("Conferences");
-        List<Thread> conferencesT = initConferences(conferences);
+        List<Thread> conferencesT = initConferences(conferences,realCon);
 
         int i = 0;
         Thread[] threads1 = new Thread[GPUST.size() + cpusT.size() + conferencesT.size() + studentsT.size() + 1];
@@ -104,9 +106,9 @@ public class CRMSRunner {
         Gson gson2 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.json"));
         writer.write("Students:");
-        gson2.toJson(students, writer);
+        gson2.toJson(realStudents, writer);
         writer.write("Conferences:");
-        gson2.toJson(conferences, writer);
+        gson2.toJson(realCon, writer);
         writer.write("Statistics:");
         gson2.toJson(Cluster.getInstance(), writer);
         writer.flush();
@@ -124,12 +126,13 @@ public class CRMSRunner {
 
 
 
-    public static List<Thread> initConferences(ArrayList<Object> conferences) {
+    public static List<Thread> initConferences(ArrayList<Object> conferences,ArrayList<ConfrenceInformation> realCon) {
         LinkedList<Thread> conferencesT = new LinkedList<>();
         for(int i = 0;i<conferences.size();i++){
             LinkedTreeMap<Object,Object> conference = (LinkedTreeMap<Object, Object>) conferences.get(i);
             Double date = (Double) conference.get("date");
             ConfrenceInformation confrenceInformation = new ConfrenceInformation((String) conference.get("name"),date.intValue());
+            realCon.add(confrenceInformation);
             Thread t4 = new Thread(new ConferenceService(confrenceInformation));
             conferencesT.addFirst(t4);
         }
@@ -165,7 +168,7 @@ public class CRMSRunner {
         return GPUST;
     }
 
-    public static List<Thread> initStudents(ArrayList<Object> students){
+    public static List<Thread> initStudents(ArrayList<Object> students,ArrayList<Student> realStudents){
         List<Student> st = new ArrayList<>();
         List<Thread> studentsT = new ArrayList<>();
         for (int i = 0; i < students.size();i++){
@@ -193,6 +196,7 @@ public class CRMSRunner {
                 degree = Student.Degree.MSc;
             Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelss);
             StudentService s = new StudentService(student);
+            realStudents.add(student);
             Thread t4 = new Thread(s);
             studentsT.add(t4);
         }
