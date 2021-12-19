@@ -1,0 +1,213 @@
+{
+  "students": [
+    {
+      "name": "Simba",
+      "department": "Computer Science",
+      "status": "MSc",
+      "publications": 3,
+      "papersRead": 8,
+      "goodModels": [
+        {
+          "name": "YOLO10",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "ResNet9000",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "DensestNet",
+          "data": {
+            "processed": 200000
+          }
+        }
+      ]
+    },
+    {
+      "name": "Zazu",
+      "department": "EE",
+      "status": "MSc",
+      "publications": 0,
+      "papersRead": 11,
+      "goodModels": []
+    },
+    {
+      "name": "Pumba",
+      "department": "Computer Science",
+      "status": "MSc",
+      "publications": 3,
+      "papersRead": 8,
+      "goodModels": [
+        {
+          "name": "Bert",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "GPT5",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "GPT10",
+          "data": {
+            "processed": 50000
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timon",
+      "department": "SE",
+      "status": "MSc",
+      "publications": 4,
+      "papersRead": 7,
+      "goodModels": [
+        {
+          "name": "Percepetron",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "GNN",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "MoreStyleGAN",
+          "data": {
+            "processed": 100000
+          }
+        },
+        {
+          "name": "ConditionalGAN",
+          "data": {
+            "processed": 500000
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nala",
+      "department": "Computer Science",
+      "status": "MSc",
+      "publications": 1,
+      "papersRead": 10,
+      "goodModels": [
+        {
+          "name": "MuchMoreEfficientNet",
+          "data": {
+            "processed": 20000
+          }
+        }
+      ]
+    }
+  ],
+  "confrenceInformations": [
+    {
+      "name": "ICML",
+      "date": 20000,
+      "models": [
+        {
+          "name": "YOLO10",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "ResNet9000",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "MuchMoreEfficientNet",
+          "data": {
+            "processed": 20000
+          }
+        },
+        {
+          "name": "Bert",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "DensestNet",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "Percepetron",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "GPT5",
+          "data": {
+            "processed": 200000
+          }
+        },
+        {
+          "name": "GPT10",
+          "data": {
+            "processed": 50000
+          }
+        },
+        {
+          "name": "GNN",
+          "data": {
+            "processed": 1000000
+          }
+        },
+        {
+          "name": "MoreStyleGAN",
+          "data": {
+            "processed": 100000
+          }
+        },
+        {
+          "name": "ConditionalGAN",
+          "data": {
+            "processed": 500000
+          }
+        }
+      ]
+    },
+    {
+      "name": "NeurIPS",
+      "date": 25000,
+      "models": []
+    },
+    {
+      "name": "CVPR",
+      "date": 30000,
+      "models": []
+    },
+    {
+      "name": "ECCV",
+      "date": 40000,
+      "models": []
+    },
+    {
+      "name": "AISTATS",
+      "date": 50000,
+      "models": []
+    }
+  ],
+  "cluster": {
+    "cpusTime": 140788,
+    "gpusTime": 29637,
+    "numOfBach": 25034
+  }
+}

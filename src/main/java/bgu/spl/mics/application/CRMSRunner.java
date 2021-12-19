@@ -106,12 +106,17 @@ public class CRMSRunner {
         Gson gson2 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.json"));
         Information information = new Information(realStudents,realCon);
-        gson2.toJson(information,writer);
+        String output = gson2.toJson(information);
+        try {
+            Writer writer1 = new FileWriter(args[1]);
+            writer1.write(output);
+            writer1.close();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
         writer.flush();
         writer.close();
-
-
-
     }
 
     public static Thread initTimeService(int duration,int tickTime){
