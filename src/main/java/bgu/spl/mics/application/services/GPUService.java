@@ -83,6 +83,7 @@ public class GPUService extends MicroService {
                         callback.getModel().setResults(Model.Results.Bad);
                 }
                 complete(callback,callback.getModel());
+                callback.getModel().setStatus(Model.Status.Tested);
             }
             else{
                 sendEvent(callback);
