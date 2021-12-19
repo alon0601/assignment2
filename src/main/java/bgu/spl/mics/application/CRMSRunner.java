@@ -3,12 +3,13 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,8 +20,8 @@ import java.util.List;
  * In the end, you should output a text file.
  */
 public class CRMSRunner {
-    public static void main(String[] args) {
-        String path = "C:\\Users\\alon5\\OneDrive\\Desktop\\example.json";
+    public static void main(String[] args) throws IOException {
+        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -41,11 +42,13 @@ public class CRMSRunner {
 
         //init timeService
         Thread threadTime = initTimeService(duration,tickTime);
+        ArrayList<Student> realStudents = new ArrayList<>();
+        ArrayList<ConfrenceInformation> realCon = new ArrayList<>();
 
 
         //init students
         ArrayList<Object> students = (ArrayList<Object>)json.get("Students");
-        List<Thread> studentsT = initStudents(students);
+        List<Thread> studentsT = initStudents(students,realStudents);
 
 
         //init gpus
@@ -60,20 +63,59 @@ public class CRMSRunner {
 
         //init conferences
         ArrayList<Object> conferences = (ArrayList<Object>) json.get("Conferences");
-        List<Thread> conferencesT = initConferences(conferences);
+        List<Thread> conferencesT = initConferences(conferences,realCon);
 
-
-        for(Thread t : GPUST)
+        int i = 0;
+        Thread[] threads1 = new Thread[GPUST.size() + cpusT.size() + conferencesT.size() + studentsT.size() + 1];
+        for(Thread t : GPUST) {
             t.start();
-        for(Thread t : cpusT)
+            threads1[i] = t;
+            i++;
+        }
+        for(Thread t : cpusT){
             t.start();
+            threads1[i] = t;
+            i++;
+        }
         for (Thread t: conferencesT){
             t.start();
+            threads1[i] = t;
+            i++;
         }
         for (Thread t : studentsT) {
             t.start();
+            threads1[i] = t;
+            i++;
         }
         threadTime.start();
+        threads1[i] = threadTime;
+
+
+        try {
+            WaitForThreadsToFinish(threads1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Cluster c = Cluster.getInstance();
+        System.out.println(" the cpus worked: " + c.getCpusTime());
+        System.out.println(" the Gpus worked: " + c.getGpusTime());
+        System.out.println("num of batches pro: " + c.getNumOfBach());
+        System.out.println("---------------------------------------");
+        //new shit
+        Gson gson2 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.json"));
+        writer.write("Students:");
+        gson2.toJson(realStudents, writer);
+        writer.write("Conferences:");
+        gson2.toJson(realCon, writer);
+        writer.write("Statistics:");
+        gson2.toJson(Cluster.getInstance(), writer);
+        writer.flush();
+        writer.close();
+
+
+
     }
 
     public static Thread initTimeService(int duration,int tickTime){
@@ -84,12 +126,13 @@ public class CRMSRunner {
 
 
 
-    public static List<Thread> initConferences(ArrayList<Object> conferences) {
+    public static List<Thread> initConferences(ArrayList<Object> conferences,ArrayList<ConfrenceInformation> realCon) {
         LinkedList<Thread> conferencesT = new LinkedList<>();
         for(int i = 0;i<conferences.size();i++){
             LinkedTreeMap<Object,Object> conference = (LinkedTreeMap<Object, Object>) conferences.get(i);
             Double date = (Double) conference.get("date");
             ConfrenceInformation confrenceInformation = new ConfrenceInformation((String) conference.get("name"),date.intValue());
+            realCon.add(confrenceInformation);
             Thread t4 = new Thread(new ConferenceService(confrenceInformation));
             conferencesT.addFirst(t4);
         }
@@ -125,7 +168,7 @@ public class CRMSRunner {
         return GPUST;
     }
 
-    public static List<Thread> initStudents(ArrayList<Object> students){
+    public static List<Thread> initStudents(ArrayList<Object> students,ArrayList<Student> realStudents){
         List<Student> st = new ArrayList<>();
         List<Thread> studentsT = new ArrayList<>();
         for (int i = 0; i < students.size();i++){
@@ -153,10 +196,18 @@ public class CRMSRunner {
                 degree = Student.Degree.MSc;
             Student student = new Student((String) t.get("name"),(String) t.get("department"),degree,modelss);
             StudentService s = new StudentService(student);
+            realStudents.add(student);
             Thread t4 = new Thread(s);
             studentsT.add(t4);
         }
         return studentsT;
+    }
+
+    private static void WaitForThreadsToFinish(Thread[] threads) throws InterruptedException {
+        for (Thread t : threads) {
+            if (t != null)
+                t.join();
+        }
     }
 }
 

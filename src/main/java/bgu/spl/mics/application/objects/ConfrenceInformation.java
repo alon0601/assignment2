@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.application.services.ConferenceService;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,9 @@ import java.util.List;
  */
 public class ConfrenceInformation {
 
-    private String name;
-    private int date;
-    private List<Model> models;
+    @Expose private String name;
+    @Expose private int date;
+    @Expose private List<Model> models;
 
     public ConfrenceInformation(String name,int data){
         this.date = data;

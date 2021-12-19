@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.application.services.StudentService;
+import com.google.gson.annotations.Expose;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,13 +20,14 @@ public class Student {
         MSc, PhD
     }
 
-    private String name;
-    private String department;
-    private Degree status;
-    private int publications;
-    private int papersRead;
+    @Expose private String name;
+    @Expose private String department;
+    @Expose private Degree status;
+    @Expose private int publications;
+    @Expose private int papersRead;
     private List<Model> models;
-    private ConcurrentLinkedDeque<Model> goodModels;
+    @Expose private ConcurrentLinkedDeque<Model> goodModels;
+    private ConcurrentLinkedDeque<Model> badModels;
 
     public String getName() {
         return name;
@@ -51,6 +53,7 @@ public class Student {
         this.papersRead = 0;
         this.models = models;
         this.goodModels = new ConcurrentLinkedDeque<>();
+        this.badModels = new ConcurrentLinkedDeque<>();
     }
 
     public List<Model> getModels(){
@@ -59,6 +62,10 @@ public class Student {
 
     public void addGoodModel(Model model){
         this.goodModels.addLast(model);
+    }
+
+    public void addBadModel(Model model){
+        this.badModels.addLast(model);
     }
 
     public int getPublications() {

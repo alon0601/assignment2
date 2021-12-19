@@ -1,13 +1,15 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Passive object representing a Deep Learning model.
  * Add all the fields described in the assignment as private fields.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class Model {
-    private String name;
-    private Data data;
+    @Expose private String name;
+    @Expose private Data data;
     private Student student;
     /**
      * Enum representing the status of the Model.
