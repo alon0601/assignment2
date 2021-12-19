@@ -22,6 +22,8 @@ public class Model {
     public Model(String name,Data data){
         this.name = name;
         this.data = data;
+        this.status = Status.preTrained;
+        this.results = Results.None;
     }
 
     public void setResults(Results results) {

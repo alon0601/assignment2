@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class CRMSRunner {
     public static void main(String[] args) throws IOException {
-        String path = "C:\\Users\\yuval\\OneDrive\\שולחן העבודה\\assignment2\\example_input.json";
+        String path = args[0];
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -105,12 +105,8 @@ public class CRMSRunner {
         //new shit
         Gson gson2 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.json"));
-        writer.write("Students:");
-        gson2.toJson(realStudents, writer);
-        writer.write("Conferences:");
-        gson2.toJson(realCon, writer);
-        writer.write("Statistics:");
-        gson2.toJson(Cluster.getInstance(), writer);
+        Information information = new Information(realStudents,realCon);
+        gson2.toJson(information,writer);
         writer.flush();
         writer.close();
 
@@ -210,8 +206,3 @@ public class CRMSRunner {
         }
     }
 }
-
-
-
-
-
