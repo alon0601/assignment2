@@ -1,8 +1,8 @@
 package bgu.spl.mics;
 
-import java.util.HashMap;
+import bgu.spl.mics.application.messages.TerminateAllBroadcast;
+
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -176,6 +176,8 @@ public abstract class MicroService implements Runnable {
             try {
                 Message m = this.messageBus.awaitMessage(this);
                 Callback c = callBacks.get(m.getClass());
+                if(m.getClass() == TerminateAllBroadcast.class)
+                    System.out.println("terminate " + this.name);
                 c.call(m);
             } catch (InterruptedException e) {
                 e.printStackTrace();

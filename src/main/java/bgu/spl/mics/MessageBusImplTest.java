@@ -1,7 +1,5 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.Event;
-import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.objects.CPU;
 import bgu.spl.mics.application.objects.GPU;
 import bgu.spl.mics.application.services.CPUService;
@@ -12,11 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import bgu.spl.mics.MessageBusImpl;
-import bgu.spl.mics.MessageBus;
-
-
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 

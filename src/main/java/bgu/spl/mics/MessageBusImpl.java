@@ -1,7 +1,7 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.PublishResultsEvent;
-import bgu.spl.mics.application.messages.TrainModelEvent;
+import bgu.spl.mics.application.messages.TerminateAllBroadcast;
 import bgu.spl.mics.application.services.ConferenceService;
 
 import java.util.Map;
@@ -82,6 +82,8 @@ public class MessageBusImpl implements MessageBus {
 			if (microServices != null) {
 				for (MicroService m : microServices) {
 					try {
+						if(b.getClass() == TerminateAllBroadcast.class)
+							System.out.println("terminate sent to this service : " + m);
 						microServiceMessages.get(m).put(b);
 					} catch (InterruptedException e) {
 						e.printStackTrace();

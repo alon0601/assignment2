@@ -6,7 +6,6 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
@@ -54,6 +53,7 @@ public class TimeService extends MicroService{
 	}
 
 	private void closeProgram(){ // do this later
+		System.out.println("close all");
 		this.sendBroadcast(new TerminateAllBroadcast());
 		stop = true;
 	}

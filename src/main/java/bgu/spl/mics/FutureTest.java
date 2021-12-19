@@ -2,7 +2,6 @@ package bgu.spl.mics;
 
 import static org.junit.Assert.*;
 
-import bgu.spl.mics.Future;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
